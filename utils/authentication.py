@@ -1,6 +1,7 @@
 import json
 import requests
 import streamlit as st
+from utils.utils import *
 
 ## -------------------------------------------------------------------------------------------------
 ## Firebase Auth API -------------------------------------------------------------------------------
@@ -97,7 +98,12 @@ def sign_in(email:str, password:str) -> None:
 def create_account(username:str, email:str, password:str) -> None:
     try:
         # Create account (and save id_token)
-        id_token = create_user_with_email_and_password(username,email,password)['idToken']
+        response = create_user_with_email_and_password(username,email,password)
+        # id_token = create_user_with_email_and_password(username,email,password)['idToken']
+        id_token = response['idToken']
+        userId = response['localId']
+        displayName = response['displayName']
+        send_to_bq('users', dict(userId=userId, displayName=displayName))
 
         # Create account and send email verification
         send_email_verification(id_token)
