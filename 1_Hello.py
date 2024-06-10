@@ -7,7 +7,6 @@ st.set_page_config(
     layout="wide"
 )
 
-
 st.title('Welcome to the EuroBox24 game')
 
 st.subheader('Use the panel on the left to navigate between pages')
@@ -56,6 +55,10 @@ if 'user_info' not in st.session_state:
 else:
     # Success message
     st.success(f"### Hello, _{st.session_state['user_info']['displayName']}_!")
+
+    st.info(
+        "Join the game's chat: [Click here!](" + st.secrets["CHAT_LINK"]['link'] + ')'
+    )
 
     # st.write(st.session_state['user_info']['localId'])
 
