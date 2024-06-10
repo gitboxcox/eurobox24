@@ -4,53 +4,6 @@ import streamlit as st
 from google.oauth2 import service_account
 from google.cloud import bigquery
 
-############################
-### SUBMIT GAMEDAY PREDS ###
-############################
-
-def submit_gameday_preds(
-    userId,
-    fixtureId,
-    hts,
-    ats,
-    ftts,
-    fpts,
-):
-    
-    form_df = pd.DataFrame.from_dict(
-        {
-            'user.id':[userId],
-            'timestamp':[time.time()],
-            'fixture.id':[fixtureId],
-            'hts':[hts],
-            'ats':[ats],
-            'ftts':[ftts],
-            'fpts':[fpts],
-        },
-        orient='columns'
-    )
-
-    progress_text = "Sending your predictions. Please wait."
-    my_bar = st.progress(0, text=progress_text)
-
-    for seconds in range(3):
-        my_bar.progress(seconds * 1 / 3, text=progress_text)
-        time.sleep(1)
-    time.sleep(0.5)
-    my_bar.empty()
-
-    try:
-        form_df.to_csv(
-            '/Users/jakubpaczusko/Desktop/gcp/eurobox24/data/preds.csv',
-            index=False,
-            mode='a',
-            header=False
-        )
-        st.success('Submitted :grinning:')
-    except:
-        st.error('Ups... Something went wrong')
-
-
 ###################################
 ### GET ALL LATEST USER'S PREDS ###
 ###################################
