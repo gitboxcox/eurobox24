@@ -31,7 +31,7 @@ else:
     st.write('''
     You have a chance to boost your tally by correctly answering the below seven questions.  
     Deadline for submitting answers is 2 hours before the kick-off of the opening game:  
-    **14.07.2024 19:00 CEST**
+    **14.06.2024 19:00 CEST**
             
     Use the form below to submit your answers. You can change your answers as many times as you wish before the deadline. After deadline your latest submission will be used.
     ''')
