@@ -52,12 +52,13 @@ else:
                 options=TEAMS
             )
 
-            third = st.selectbox(
-                label='**Who will get the third place?**',
-                options=TEAMS
-            )
+            # third = st.selectbox(
+            #     label='**Who will get the third place?**',
+            #     options=TEAMS
+            # )
 
-            podium_check = len(set([first, second, third])) == 3
+            # podium_check = len(set([first, second, third])) == 3
+            podium_check = len(set([first, second])) == 2
 
             top_gs = st.selectbox(
                 label='**Who will score the most goals?**',

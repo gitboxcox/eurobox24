@@ -7,7 +7,7 @@ st.write('''
 ---
 You can score points in 3 different ways:
 1. Pre-tournament predictions about (each worth 10 points) -> Submit by **14/06/2024 19:00 CEST**
-    - Winner, Runner-up and Third Place
+    - Winner & Runner-up
     - Top goal scorer
     - Player of the torunament
     - Phase of the tournament at which Poland will exit
