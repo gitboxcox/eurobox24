@@ -23,7 +23,7 @@ st.write('''
 You can additionally score points with Your Hero.  
 Select one player for the whole torunament.  
 Deadline for choosing Your Hero is 2 hours before the kick-off of the opening game:  
-**14.07.2024 19:00 CEST**  
+**14.06.2024 19:00 CEST**  
 ''')
 
 with st.expander('How to score points?'):
