@@ -114,7 +114,6 @@ else:
         _HERO = HEROES.loc[HEROES['userId'] == st.session_state['user_info']['localId']].sort_values('timestamp', ascending=False)['heroName'].iloc[0]
         HERO = SQUADS.loc[SQUADS['player.name']==_HERO]
         st.write(f'''
-        ---
         ### {HERO['player.name'].iloc[0]} 
         #### _{HERO['team.name'].iloc[0]}_  
         #### _{HERO['player.position'].iloc[0]}_

@@ -13,6 +13,11 @@ def get_squads(foo=1):
     squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
     return squads
 
+@st.cache_data
+def get_pretournament_preds(foo=1):
+    preds = read_all_pretournament()
+    return preds
+
 
 if 'user_info' not in st.session_state:
     st.write("### Log in on the **Hello** page")
@@ -91,3 +96,27 @@ else:
                             timestamp=time.time()
                         )
                         send_to_bq('pretournament_preds', row_to_insert)
+
+    _PRE_TOUR_PREDS = get_pretournament_preds()
+    # USER_PRE_TOUR_PREDS = _PRE_TOUR_PREDS.loc[_PRE_TOUR_PREDS['userId']==st.session_state['user_info']['localId']].sort_values('timestamp', ascending=False)
+
+    st.write('---')
+    st.write('If you cannot see Your Hero after choosing him, use the below refresh button')
+    refresh = st.button(label='Refresh')
+    st.write('---')
+
+    st.write("### Your Pre-Tournament Preds")
+    if refresh:
+        _PRE_TOUR_PREDS = get_pretournament_preds(time.time())
+    if _PRE_TOUR_PREDS.loc[_PRE_TOUR_PREDS['userId']==st.session_state['user_info']['localId']].shape[0] < 1:
+        st.write("You have not submitted Pre-Tournaments Preds yet")
+    else:
+        USER_PRE_TOUR_PREDS = _PRE_TOUR_PREDS.loc[_PRE_TOUR_PREDS['userId']==st.session_state['user_info']['localId']].sort_values('timestamp', ascending=False)
+        USER_PRE_TOUR_PREDS = USER_PRE_TOUR_PREDS.iloc[0][1:-1].rename('Predictions')
+        USER_PRE_TOUR_PREDS.index = [
+            'Winner', 'Second Place', 
+            'Top Scorer', 'MVP',
+            "Lewandowski's goals",
+            "How far will Poland advance?"
+        ]
+        st.dataframe(USER_PRE_TOUR_PREDS)
