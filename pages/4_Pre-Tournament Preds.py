@@ -91,7 +91,7 @@ else:
                     else:
                         row_to_insert = dict(
                             userId=st.session_state['user_info']['localId'],
-                            first=first, second=second, third=third,
+                            first=first, second=second, #third=third,
                             top_gs=top_gs, mvp=mvp,
                             lewy_goals=lewy_goals, poland=poland,
                             timestamp=time.time()
