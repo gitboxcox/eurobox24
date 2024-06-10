@@ -4,14 +4,14 @@ from google.oauth2 import service_account
 from google.cloud import storage
 
 st.set_page_config(layout="wide")
+conn = st.connection('gcs', type=FilesConnection)
 
-st.title('Fixtures & Results')
-st.write('''
-Here you can see the results of the past games and check what games are yet to be played.
-''')
 
-creds = service_account.Credentials.from_service_account_file('/Users/jakubpaczusko/Desktop/gcp/eurobox24/.streamlit/eurobox24-9e51d9d0d968.json')
-client = storage.Client(project='eurobox24', credentials=creds)
+@st.cache_data
+def get_fixtures(foo=1):
+    fixtures = conn.read('eurobox24/data/fixtures.csv', input_format='csv')
+    fixtures['fixture.date'] = pd.to_datetime(fixtures['fixture.date'])
+    return fixtures
 
 def add_custom_sort(x):
     if x == 'FT':
@@ -21,19 +21,13 @@ def add_custom_sort(x):
     else:
         return 2
 
-@st.cache_data
-def get_fixtures_and_results(foo=1):
-    
-    df = pd.read_csv(
-        '/Users/jakubpaczusko/Desktop/gcp/eurobox24/data/fixtures.csv',
-        # 'gs://eurobox24/data/fixtures.csv',
-        # storage_options={'token':'/Users/jakubpaczusko/Desktop/gcp/eurobox24/.streamlit/eurobox24-9e51d9d0d968.json'},
-        parse_dates=['fixture.date']
-    )
 
-    return df
+st.title('Fixtures & Results')
+st.write('''
+Here you can see the results of the past games and check what games are yet to be played.
+''')
 
-RAW_FIXTURES = get_fixtures_and_results()
+RAW_FIXTURES = get_fixtures()
 
 cols_to_show = ['fixture.date_nice', 'fixture.gameday.name', 'fixture.venue.name', 'teams.home.name', 'goals.home', 'goals.away', 'teams.away.name']
 renames = ['Date', 'Gameday', 'Stadium', 'Home Team', 'Home Team Score', 'Away Team Score', 'Away Team']
