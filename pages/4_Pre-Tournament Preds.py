@@ -3,17 +3,14 @@ import pandas as pd
 import time
 from utils.utils import *
 import datetime
+from st_files_connection import FilesConnection
 
 st.set_page_config(layout="wide")
+conn = st.connection('gcs', type=FilesConnection)
 
 @st.cache_data
 def get_squads(foo=1):
-    squads = pd.read_csv('/Users/jakubpaczusko/Desktop/gcp/eurobox24/data/squads.csv')
-    return squads
-
-@st.cache_data
-def get_squads(foo=1):
-    squads = pd.read_csv('/Users/jakubpaczusko/Desktop/gcp/eurobox24/data/squads.csv')
+    squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
     return squads
 
 
