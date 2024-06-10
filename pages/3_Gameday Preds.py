@@ -5,7 +5,6 @@ from utils.utils import *
 import datetime
 from st_files_connection import FilesConnection
 
-
 ##############
 ### CONFIG ###
 ##############

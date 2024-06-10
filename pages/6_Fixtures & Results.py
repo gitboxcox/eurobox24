@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
-from google.oauth2 import service_account
-from google.cloud import storage
+from st_files_connection import FilesConnection
 
 st.set_page_config(layout="wide")
 conn = st.connection('gcs', type=FilesConnection)
-
 
 @st.cache_data
 def get_fixtures(foo=1):
