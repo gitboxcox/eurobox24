@@ -2,22 +2,20 @@ import streamlit as st
 import pandas as pd
 import time
 from utils.utils import *
-import datetime
-from st_files_connection import FilesConnection
+from datetime import datetime
+import pytz
 
 st.set_page_config(layout="wide")
-conn = st.connection('gcs', type=FilesConnection)
 
 @st.cache_data
 def get_squads(foo=1):
-    squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
+    squads = read_squads()
     return squads
 
 @st.cache_data
 def get_pretournament_preds(foo=1):
     preds = read_all_pretournament()
     return preds
-
 
 if 'user_info' not in st.session_state:
     st.write("### Log in on the **Hello** page")
@@ -86,7 +84,8 @@ else:
                 if not podium_check:
                     st.error('Select three different teams you cheeky cunt')
                 else:
-                    if datetime.datetime.now() > datetime.datetime(2024,6,14,19,0,0):
+                    cest = pytz.timezone('Europe/Warsaw')
+                    if datetime.now(cest) > datetime(2024,6,14,19,0,0,tzinfo=cest):
                         st.error('Too late bro')
                     else:
                         row_to_insert = dict(

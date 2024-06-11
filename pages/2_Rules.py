@@ -5,6 +5,12 @@ st.set_page_config(layout="wide")
 st.write('''
 # EuroBox24 Rules
 ---
+The sign-up fee is 20 PLN
+Price split:  
+- 1st place: 50%
+- 2nd place: 30%
+- 3rd place: 20%
+         
 You can score points in 3 different ways:
 1. Pre-tournament predictions about (each worth 10 points) -> Submit by **14/06/2024 19:00 CEST**
     - Winner & Runner-up

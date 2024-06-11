@@ -6,3 +6,4 @@ db-dtypes
 gcsfs
 st-files-connection
 google-cloud-bigquery
+pytz

@@ -2,25 +2,22 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from utils.utils import *
-import datetime
-from st_files_connection import FilesConnection
+from datetime import datetime
+import pytz
 
 ##############
 ### CONFIG ###
 ##############
-
 st.set_page_config(layout="wide")
-conn = st.connection('gcs', type=FilesConnection)
 
 @st.cache_data
 def get_fixtures(foo=1):
-    fixtures = conn.read('eurobox24/data/fixtures.csv', input_format='csv')
-    fixtures['fixture.date'] = pd.to_datetime(fixtures['fixture.date'])
+    fixtures = read_fixtures()
     return fixtures
 
 @st.cache_data
 def get_squads(foo=1):
-    squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
+    squads = read_squads()
     return squads
 
 @st.cache_data
@@ -91,6 +88,11 @@ else:
         hide_index=True
     )
 
+    st.write(f'''
+    **DEADLINE FOR SUBMITTING**:   
+    {GAMEDAY_FIXTURES['fixture.gameday.deadline'].iloc[0]}
+    ''')
+
     st.write("---")
 
     _, _column, _ = st.columns([1,3,1])
@@ -102,10 +104,11 @@ else:
 
             home_team_name, away_team_name = GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'teams.home.name'].iloc[0], GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'teams.away.name'].iloc[0]
             home_team_id, away_team_id = GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'teams.home.id'].iloc[0], GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'teams.away.id'].iloc[0]
-            fixture_deadline = GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'fixture.date'].iloc[0] - pd.Timedelta(hours=2)
+            gameday_deadline = GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id, 'fixture.gameday.deadline'].iloc[0]
 
             with st.expander(f"{GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'teams.home.name'].iloc[0]} :crossed_swords: {GAMEDAY_FIXTURES.loc[GAMEDAY_FIXTURES['fixture.id']==id,'teams.away.name'].iloc[0]}"):
 
+                # st.write(gameday_deadline)
                 form_key = str(id)
 
                 with st.form(form_key):
@@ -114,20 +117,21 @@ else:
                     ats = st.number_input(label=away_team_name, min_value=0)
                     ftts = st.selectbox(
                         label='First Team to Score', 
-                        options=[home_team_name, away_team_name],
+                        options=[home_team_name, away_team_name, 'No Goals'],
                         key=f"ftts-{form_key}"
                     )
 
                     fixture_players = SQUADS.loc[SQUADS['team.id']==home_team_id, 'player.name'].to_list() + SQUADS.loc[SQUADS['team.id']==away_team_id, 'player.name'].to_list()
                     fpts = st.selectbox(
                         label='First Player to Score',
-                        options=fixture_players
+                        options=fixture_players + ['Own Goal', 'No Goals']
                     )
 
                     submit = st.form_submit_button("Submit")
                     if submit:
                         # check if after deadline
-                        if datetime.datetime.now() > fixture_deadline:
+                        cest = pytz.timezone('Europe/Warsaw')
+                        if datetime.now(cest) > gameday_deadline:
                             st.error('Too late bro')
                         else:
                             row_to_insert = {

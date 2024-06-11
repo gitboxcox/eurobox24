@@ -3,6 +3,7 @@ import time
 import streamlit as st
 from google.oauth2 import service_account
 from google.cloud import bigquery
+from st_files_connection import FilesConnection
 
 ###################################
 ### GET ALL LATEST USER'S PREDS ###
@@ -40,7 +41,7 @@ def send_to_bq(
 
     # Check for errors
     if errors == []:
-        st.success("Row inserted successfully.")
+        st.success("Successfully submitted.")
     else:
         st.error(errors)
 
@@ -77,3 +78,15 @@ def read_all_pretournament():
     df = CLIENT.query(sql).to_dataframe(int_dtype=None, float_dtype=None)
 
     return df
+
+conn = st.connection('gcs', type=FilesConnection)
+
+def read_fixtures():
+    fixtures = conn.read('eurobox24/data/fixtures.csv', input_format='csv')
+    fixtures['fixture.date'] = pd.to_datetime(fixtures['fixture.date'])
+    fixtures['fixture.gameday.deadline'] = pd.to_datetime(fixtures['fixture.gameday.deadline'])
+    return fixtures
+
+def read_squads():
+    squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
+    return squads

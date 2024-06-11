@@ -2,15 +2,14 @@ import streamlit as st
 import pandas as pd
 import time
 from utils.utils import *
-import datetime
-from st_files_connection import FilesConnection
+from datetime import datetime
+import pytz
 
 st.set_page_config(layout="wide")
-conn = st.connection('gcs', type=FilesConnection)
 
 @st.cache_data
 def get_squads(foo=1):
-    squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
+    squads = read_squads()
     return squads
 
 @st.cache_data
@@ -89,7 +88,8 @@ else:
         label=f"I'm choosing :star: **{player}** :star:"
     )
     if submit and player:
-        if datetime.datetime.now() > datetime.datetime(2024,6,14,19,0,0):
+        cest = pytz.timezone('Europe/Warsaw')
+        if datetime.now(cest) > datetime(2024,6,14,19,0,0,tzinfo=cest):
             st.error('Too late bro')
         else:
             row_to_insert = dict(
