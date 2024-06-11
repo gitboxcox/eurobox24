@@ -1,3 +1,4 @@
 .devcontainer/
 .streamlit/secrets.toml
 notebooks/
+utils/get_fixtures.py
