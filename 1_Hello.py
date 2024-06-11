@@ -12,12 +12,18 @@ if 'user_info' not in st.session_state:
     login_form = login.form(key='login-form', clear_on_submit=False)
     login_email = login_form.text_input(label='Email')
     login_password = login_form.text_input(label='Password', type='password')
+    login_form.caption('''
+    This app uses Firebase to store and process data in US data centers. By logging in, you consent to have your data stored and processed in the United States. If you do not agree to this, delete your account using "Delete account" option after logging in.
+    ''')
     # login_notification = login.empty()
 
     signup_form = signup.form(key='signup-form', clear_on_submit=False)
     signup_username = signup_form.text_input(label='Username')
     signup_email = signup_form.text_input(label='Email')
     signup_password = signup_form.text_input(label='Password', type='password')
+    signup_form.caption('''
+    This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process.
+    ''')
     # signup_notification = signup.empty()
 
     forgot_password_form = forgot_password.form(key='forgot-password-form', clear_on_submit=False)
