@@ -1,12 +1,6 @@
 import streamlit as st
 import utils.authentication as auth_functions
 
-st.set_page_config(
-    page_title='EuroBox24: Home Page',
-    page_icon=':house:',
-    layout="wide"
-)
-
 st.title('Welcome to the EuroBox24 game')
 
 st.subheader('Use the panel on the left to navigate between pages')

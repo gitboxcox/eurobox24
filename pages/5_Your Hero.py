@@ -5,8 +5,6 @@ from utils.utils import *
 from datetime import datetime
 import pytz
 
-st.set_page_config(layout="wide")
-
 @st.cache_data
 def get_squads(foo=1):
     squads = read_squads()
@@ -49,8 +47,17 @@ if 'user_info' not in st.session_state:
     st.write("### Log in on the **Hello** page")
 else:
 
-    SQUADS = get_squads()
-    HEROES = get_heroes()
+    if 'squads' not in st.session_state:
+        SQUADS = get_squads()
+        st.session_state['squads'] = SQUADS
+    else:
+        SQUADS = st.session_state['squads']
+
+    if 'heroes' not in st.session_state:
+        HEROES = get_heroes()
+        st.session_state['heroes'] = HEROES
+    else:
+        HEROES = st.session_state['heroes']
 
     st.write(
     '''
@@ -107,7 +114,9 @@ else:
     st.write('## Your Hero is:')
     if refresh:
         SQUADS = get_squads(time.time())
+        st.session_state['squads'] = SQUADS
         HEROES = get_heroes(time.time())
+        st.session_state['heroes'] = HEROES
     if HEROES.loc[HEROES['userId'] == st.session_state['user_info']['localId']].shape[0] < 1:
         st.write("You have not selected Your Hero yet")
     else:

@@ -5,11 +5,6 @@ from utils.utils import *
 from datetime import datetime
 import pytz
 
-##############
-### CONFIG ###
-##############
-st.set_page_config(layout="wide")
-
 @st.cache_data
 def get_fixtures(foo=1):
     fixtures = read_fixtures()

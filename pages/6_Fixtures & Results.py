@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 from utils.utils import *
 
-st.set_page_config(layout="wide")
-
 @st.cache_data
 def get_fixtures(foo=1):
     fixtures = read_fixtures()

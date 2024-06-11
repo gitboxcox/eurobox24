@@ -5,8 +5,6 @@ from utils.utils import *
 from datetime import datetime
 import pytz
 
-st.set_page_config(layout="wide")
-
 @st.cache_data
 def get_squads(foo=1):
     squads = read_squads()
@@ -82,7 +80,7 @@ else:
             
             if send:
                 if not podium_check:
-                    st.error('Select three different teams you cheeky cunt')
+                    st.error('Select two different teams you cheeky cunt')
                 else:
                     cest = pytz.timezone('Europe/Warsaw')
                     if datetime.now(cest) > datetime(2024,6,14,19,0,0,tzinfo=cest):
@@ -97,8 +95,11 @@ else:
                         )
                         send_to_bq('pretournament_preds', row_to_insert)
 
-    _PRE_TOUR_PREDS = get_pretournament_preds()
-    # USER_PRE_TOUR_PREDS = _PRE_TOUR_PREDS.loc[_PRE_TOUR_PREDS['userId']==st.session_state['user_info']['localId']].sort_values('timestamp', ascending=False)
+    if 'pre_tour_preds' not in st.session_state:
+        _PRE_TOUR_PREDS = get_pretournament_preds()
+        st.session_state['pre_tour_preds'] = _PRE_TOUR_PREDS
+    else:
+        _PRE_TOUR_PREDS = st.session_state['pre_tour_preds']
 
     st.write('---')
     st.write('If you cannot see Your Hero after choosing him, use the below refresh button')
@@ -108,6 +109,7 @@ else:
     st.write("### Your Pre-Tournament Preds")
     if refresh:
         _PRE_TOUR_PREDS = get_pretournament_preds(time.time())
+        st.session_state['pre_tour_preds'] = _PRE_TOUR_PREDS
     if _PRE_TOUR_PREDS.loc[_PRE_TOUR_PREDS['userId']==st.session_state['user_info']['localId']].shape[0] < 1:
         st.write("You have not submitted Pre-Tournaments Preds yet")
     else:
