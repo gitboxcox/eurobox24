@@ -13,7 +13,7 @@ if 'user_info' not in st.session_state:
     login_email = login_form.text_input(label='Email')
     login_password = login_form.text_input(label='Password', type='password')
     login_form.caption('''
-    This app uses Firebase to store and process data in US data centers. By logging in, you consent to have your data stored and processed in the United States. If you do not agree to this, delete your account using "Delete account" option after logging in.
+    This app uses Firebase to store and process data in US data centers. By logging in, you consent to have your data stored and processed in the United States. If you do not agree to this, delete your account using "Delete account" option after logging in. Email is only used as an login option.
     ''')
     # login_notification = login.empty()
 
@@ -22,7 +22,7 @@ if 'user_info' not in st.session_state:
     signup_email = signup_form.text_input(label='Email')
     signup_password = signup_form.text_input(label='Password', type='password')
     signup_form.caption('''
-    This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process.
+    This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process. Email is only used as an login option.
     ''')
     # signup_notification = signup.empty()
 
