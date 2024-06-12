@@ -27,7 +27,7 @@ def get_latest_preds(preds, foo=1):
     return latest_preds
 
 @st.cache_data
-def get_latest_user_preds(latest_preds, userId, foo=1):
+def get_latest_user_preds(latest_preds, userId):
     latest_user_preds = latest_preds.loc[latest_preds['userId']==userId]
     return latest_user_preds
 
@@ -44,13 +44,13 @@ else:
     if 'data' not in st.session_state:
         RAW_FIXTURES = get_fixtures()
         SQUADS = get_squads()
-        RAW_PREDS = get_preds()
-        LATEST_PREDS = get_latest_preds(RAW_PREDS)
+        RAW_PREDS = get_preds(time.time())
+        LATEST_PREDS = get_latest_preds(RAW_PREDS, time.time())
         st.session_state['data'] = {'raw_fixtures':RAW_FIXTURES, 'squads':SQUADS, 'raw_preds':RAW_PREDS, 'latest_preds':LATEST_PREDS}
     else:
         RAW_FIXTURES, SQUADS, RAW_PREDS, LATEST_PREDS = st.session_state['data']['raw_fixtures'], st.session_state['data']['squads'], st.session_state['data']['raw_preds'], st.session_state['data']['latest_preds']
 
-    USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'])
+    # USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'])
             
     st.write("If you cannot see your latest predictions, use the button below to refresh data")
     refresh = st.button(label='Refresh', key='refresh')
@@ -60,7 +60,9 @@ else:
         RAW_PREDS = get_preds(time.time())
         LATEST_PREDS = get_latest_preds(RAW_PREDS, time.time())
         st.session_state['data'] = {'raw_fixtures':RAW_FIXTURES, 'squads':SQUADS, 'raw_preds':RAW_PREDS, 'latest_preds':LATEST_PREDS}
-        USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'], time.time())
+        # USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'], time.time())
+
+    USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'])
 
     available_gamedays = RAW_FIXTURES.loc[pd.to_datetime(RAW_FIXTURES['fixture.date']).dt.tz_localize(None)-pd.Timedelta(hours=2)>pd.to_datetime('now'), 'fixture.gameday.name'].unique().tolist()
 
@@ -146,5 +148,10 @@ else:
                                 "timestamp": time.time()
                             }
                             send_to_bq('preds', row_to_insert)
-
+                            RAW_FIXTURES = get_fixtures(time.time())
+                            SQUADS = get_squads(time.time())
+                            RAW_PREDS = get_preds(time.time())
+                            LATEST_PREDS = get_latest_preds(RAW_PREDS, time.time())
+                            st.session_state['data'] = {'raw_fixtures':RAW_FIXTURES, 'squads':SQUADS, 'raw_preds':RAW_PREDS, 'latest_preds':LATEST_PREDS}
+                            USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'])
 

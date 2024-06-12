@@ -94,9 +94,11 @@ else:
                             timestamp=time.time()
                         )
                         send_to_bq('pretournament_preds', row_to_insert)
+                        _PRE_TOUR_PREDS = get_pretournament_preds(time.time())
+                        st.session_state['pre_tour_preds'] = _PRE_TOUR_PREDS
 
     if 'pre_tour_preds' not in st.session_state:
-        _PRE_TOUR_PREDS = get_pretournament_preds()
+        _PRE_TOUR_PREDS = get_pretournament_preds(time.time())
         st.session_state['pre_tour_preds'] = _PRE_TOUR_PREDS
     else:
         _PRE_TOUR_PREDS = st.session_state['pre_tour_preds']

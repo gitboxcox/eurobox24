@@ -54,7 +54,7 @@ else:
         SQUADS = st.session_state['squads']
 
     if 'heroes' not in st.session_state:
-        HEROES = get_heroes()
+        HEROES = get_heroes(time.time())
         st.session_state['heroes'] = HEROES
     else:
         HEROES = st.session_state['heroes']
@@ -105,6 +105,8 @@ else:
                 timestamp=time.time()
             )
             send_to_bq('heroes', row_to_insert)
+            HEROES = get_heroes(time.time())
+            st.session_state['heroes'] = HEROES
 
     st.write('---')
     st.write('If you cannot see Your Hero after choosing him, use the below refresh button')

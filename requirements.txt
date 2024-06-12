@@ -6,4 +6,5 @@ db-dtypes
 gcsfs
 st-files-connection
 google-cloud-bigquery
+google-cloud-storage
 pytz
