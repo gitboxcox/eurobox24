@@ -32,7 +32,8 @@ with st.expander('How to score points?'):
     | For each goal scored by a goalkeeper or defender          | 6      |
     | For each goal scored by a midfielder                      | 5      |
     | For each goal scored by an attacker                       | 4      |
-    | For each assist for a goal                                | 3      |
+    | For each assist for a goal*                               | 3      |
+    | For a clean sheet by a a goalkeeper or defender           | 4      |        
     | For a clean sheet by a midfielder                         | 1      |
     | For every 3 shots saved by a goalkeeper                   | 1      |
     | For each penalty save                                     | 5      |
@@ -41,6 +42,10 @@ with st.expander('How to score points?'):
     | For each yellow card                                      | -1     |
     | For each red card                                         | -3     |
     | For each own goal                                         | -2     |
+    ''')
+    st.caption('''
+    * Won penalties may not be counted as assists.  
+    The app rely on how API-Football defines an assist in their data :grinning:
     ''')
 
 if 'user_info' not in st.session_state:

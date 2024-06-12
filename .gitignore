@@ -3,3 +3,4 @@
 notebooks/
 utils/get_fixtures.py
 gcp-src/
+rules.md
