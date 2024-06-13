@@ -1,5 +1,7 @@
 import streamlit as st
 import utils.authentication as auth_functions
+from datetime import datetime
+import pytz
 
 st.title('Welcome to the EuroBox24 game')
 
@@ -17,14 +19,20 @@ if 'user_info' not in st.session_state:
     ''')
     # login_notification = login.empty()
 
-    signup_form = signup.form(key='signup-form', clear_on_submit=False)
-    signup_username = signup_form.text_input(label='Username')
-    signup_email = signup_form.text_input(label='Email')
-    signup_password = signup_form.text_input(label='Password', type='password')
-    signup_form.caption('''
-    This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process. Email is only used as an login option.
-    ''')
-    # signup_notification = signup.empty()
+    if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
+        signup.warning(
+            '''Sign up not available anymore''',
+            icon=':info'
+        )
+    else:
+        signup_form = signup.form(key='signup-form', clear_on_submit=False)
+        signup_username = signup_form.text_input(label='Username')
+        signup_email = signup_form.text_input(label='Email')
+        signup_password = signup_form.text_input(label='Password', type='password')
+        signup_form.caption('''
+        This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process. Email is only used as an login option.
+        ''')
+        # signup_notification = signup.empty()
 
     forgot_password_form = forgot_password.form(key='forgot-password-form', clear_on_submit=False)
     forgot_password_email = forgot_password_form.text_input(label='Email')

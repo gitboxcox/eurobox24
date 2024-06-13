@@ -33,7 +33,7 @@ def get_latest_user_preds(latest_preds, userId):
 
 st.write('''
 # Gameday Preds 
-#### Here you can make your predictions, see your past predictions, as well as check other players' decisions
+#### Use this page to submitt predictions for each gameday. You can check your points, position, as well as other players' predictions on the Dashboard page.
 ---
 ''')
 
@@ -76,6 +76,7 @@ else:
     st.write('Games during selected Gameday:')
     GAMEDAY_FIXTURES_SHOW = GAMEDAY_FIXTURES.merge(USER_PREDS, how='left', left_on='fixture.id', right_on='fixtureId')
     GAMEDAY_FIXTURES_SHOW['is.predicted'] = np.where(GAMEDAY_FIXTURES_SHOW['userId'].isna(), 'NOT PREDICTED ❌', 'PREDICTED ✅')
+    GAMEDAY_FIXTURES_SHOW = GAMEDAY_FIXTURES_SHOW.rename(columns={'ftts_x':'ftts_act', 'fpts_x':'fpts_act', 'ftts_y':'ftts', 'fpts_y':'fpts'})
     cols_to_show = ['fixture.date_nice', 'teams.home.name', 'teams.away.name', 'is.predicted', 'hts', 'ats', 'ftts', 'fpts']
     renames = ['Date', 'Home Team', 'Away Team', 'Did you predict?', 'Home Team Score', 'Away Team Score', 'First Team to Score', 'First Player to Score']
     renames_dict = dict(zip(cols_to_show, renames))

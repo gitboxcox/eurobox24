@@ -2,7 +2,7 @@ import pandas as pd
 import time
 import streamlit as st
 from google.oauth2 import service_account
-from google.cloud import bigquery
+from google.cloud import bigquery, storage
 from st_files_connection import FilesConnection
 
 ###################################
@@ -90,3 +90,39 @@ def read_fixtures():
 def read_squads():
     squads = conn.read('eurobox24/data/squads.csv', input_format='csv')
     return squads
+
+def nice_fixture(fixtureId, fixtures):
+
+    if fixtureId == 'All':
+        return "All"
+    else:
+        home = fixtures.loc[fixtures['fixture.id']==fixtureId, 'teams.home.name'].iloc[0]
+        away = fixtures.loc[fixtures['fixture.id']==fixtureId, 'teams.away.name'].iloc[0]
+        s = f"{home} vs {away}"
+        return s
+
+def read_all_scored_preds():
+
+    # AUTH
+    # creds = service_account.Credentials.from_service_account_file('/Users/jakubpaczusko/Desktop/gcp/eurobox24/.streamlit/eurobox24-9e51d9d0d968.json')
+    client = storage.Client(credentials=credentials)
+
+    # ALL BLOBS WITH SCORED PREDS
+    blobs = client.list_blobs('eurobox24', prefix='data/gameday_preds')
+
+    to_read = [
+        blob.name for blob in blobs if blob.name.endswith('csv')
+    ]
+
+    if len(to_read) > 0:
+
+        df_list = [
+            conn.read(f'eurobox24/{csv}', input_format='csv')
+            for csv in to_read
+        ]
+
+        return pd.concat(df_list).reset_index(drop=True)
+    
+    else:
+        print('NO SCORED PREDS')
+        return pd.DataFrame()
