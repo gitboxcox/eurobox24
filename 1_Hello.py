@@ -65,7 +65,8 @@ else:
     st.success(f"### Hello, _{st.session_state['user_info']['displayName']}_!")
 
     st.info(
-        "Join the game's chat: [Click here!](" + st.secrets["CHAT_LINK"]['link'] + ')'
+        # "Join the game's chat: [Click here!](" + st.secrets["CHAT_LINK"]['link'] + ')'
+        "You will be added to the game's groupchat"
     )
 
     # st.write(st.session_state['user_info']['localId'])
