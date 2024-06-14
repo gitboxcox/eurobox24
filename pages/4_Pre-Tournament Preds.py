@@ -44,7 +44,7 @@ else:
         with _column:
             with st.form(key='pre-tournament-preds'):
 
-                st.write('For the tournament podium questions, please select **three different** teams')
+                st.write('For the first two questions, please select **two different** teams')
 
                 first = st.selectbox(
                     label='**Who will win the Euros?**',
