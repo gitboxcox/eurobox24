@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from utils.utils import *
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 @st.cache_data
@@ -137,7 +137,7 @@ else:
                         #     gameday_deadline.minute,
                         #     tzinfo=cest
                         # ):
-                        if datetime.now() > gameday_deadline:
+                        if datetime.now() + timedelta(hours=2) > gameday_deadline:
                             st.error('Too late bro')
                         else:
                             row_to_insert = {

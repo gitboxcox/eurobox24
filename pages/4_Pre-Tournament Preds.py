@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import time
 from utils.utils import *
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 @st.cache_data
@@ -28,7 +28,7 @@ else:
     # if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
     st.write(datetime.now())
     st.write(datetime(2024,6,14,19,0))
-    if datetime.now() > datetime(2024,6,14,19,0):
+    if datetime.now() + timedelta(hours=2) > datetime(2024,6,14,19,0):
         st.info(
             '''Ups... It's past the deadline. Unfortunately, you cannot select Your Hero now''',
             icon='🕐'
