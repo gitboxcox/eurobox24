@@ -23,6 +23,16 @@ def get_last_pretournament_preds(foo=1):
     preds.columns = ['Player', 'Winner', '2nd Place', 'Top Scorer', 'MVP', "Lewandowski's goals", "Poland Exit Phase"]
     return preds
 
+@st.cache_data
+def get_last_preds(foo=1):
+    preds = read_all_preds()
+    idx = preds.groupby(['userId', 'fixtureId'])['timestamp'].idxmax()
+    preds = preds.loc[idx].reset_index(drop=True)
+    preds = preds.drop(columns=['timestamp'])
+    # TODO : TESTING
+    preds['points'] = 0
+    return preds
+
 if 'fixtures' not in st.session_state:
     fixtures = get_fixtures(time.time())
     st.session_state['fixtures'] = fixtures
@@ -30,16 +40,22 @@ else:
     fixtures = st.session_state['fixtures']
 
 if 'scored_preds' not in st.session_state:
-    preds = get_all_scored_preds(time.time())
-    st.session_state['scored_preds'] = preds
+    scored_preds = get_all_scored_preds(time.time())
+    st.session_state['scored_preds'] = scored_preds
 else:
-    preds = st.session_state['scored_preds']
+    scored_preds = st.session_state['scored_preds']
 
 if 'pretour' not in st.session_state:
     pretour = get_last_pretournament_preds(time.time())
     st.session_state['pretour'] = pretour
 else:
     pretour = st.session_state['pretour']
+
+if 'preds' not in st.session_state:
+    preds = get_last_preds(time.time())
+    st.session_state['preds'] = preds
+else:
+    preds = st.session_state['preds']
 
 st.title('Dashboard')
 st.write('''
@@ -66,41 +82,56 @@ else:
         fixtures = get_fixtures(time.time())
         st.session_state['fixtures'] = fixtures
 
-        preds = get_all_scored_preds(time.time())
-        st.session_state['scored_preds'] = preds
+        scored_preds = get_all_scored_preds(time.time())
+        st.session_state['scored_preds'] = scored_preds
 
         pretour = get_last_pretournament_preds(time.time())
         st.session_state['pretour'] = pretour
 
+        preds = get_last_preds(time.time())
+        st.session_state['preds'] = preds
 
-    with st.expander('#### Your Points'):
-        # SELECT GAMEDAY
-        gameday = st.selectbox(
-            label='Select Gameday',
-            options=['All']+fixtures['fixture.gameday.name'].unique().tolist(),
-            key='points-select-gameday'
-        )
+    st.divider()
 
-        # SELECT FIXTURE
-        fixtures_to_show = ['All'] + fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list() if gameday != "All" else ['All'] + fixtures['fixture.id'].to_list()
-        fixture = st.selectbox(
-            label='Select Fixture',
-            # options=['All']+fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list(),
-            options=fixtures_to_show,
-            format_func=lambda x: nice_fixture(fixtureId=x,fixtures=fixtures),
-            key='points-select-fixture'
-        )
+    st.subheader('Your Points')
+    st.write("You can see your preds for ")
 
-        # FILTER FIXTURES
-        if fixture != 'All':
-            fixtures_to_filter = [fixture]
-        elif gameday == 'All':
-            fixtures_to_filter = fixtures['fixture.id'].to_list()
-        else:
-            fixtures_to_filter = fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list()
+        # with st.expander('#### Your Points'):
+    # SELECT GAMEDAY
+    gameday = st.selectbox(
+        label='Select Gameday',
+        options=['All']+fixtures['fixture.gameday.name'].unique().tolist(),
+        key='points-select-gameday'
+    )
 
-        # st.dataframe(read_all_scored_preds())
-        st.write('Work In Progress')
+    # SELECT FIXTURE
+    fixtures_to_show = ['All'] + fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list() if gameday != "All" else ['All'] + fixtures['fixture.id'].to_list()
+    fixture = st.selectbox(
+        label='Select Fixture',
+        # options=['All']+fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list(),
+        options=fixtures_to_show,
+        format_func=lambda x: nice_fixture(fixtureId=x,fixtures=fixtures),
+        key='points-select-fixture'
+    )
+
+    # FILTER FIXTURES
+    if fixture != 'All':
+        fixtures_to_filter = [fixture]
+    elif gameday == 'All':
+        fixtures_to_filter = fixtures['fixture.id'].to_list()
+    else:
+        fixtures_to_filter = fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list()
+
+    # st.write(preds.columns)
+    # st.write(st.session_state['user_info']['localId'])
+    # st.dataframe(
+    #     preds.loc[
+    #         (preds['fixtureId'].isin(fixtures_to_filter)) & (preds['userId']==st.session_state['user_info']['localId']),
+    #         ['hts', 'ats', 'ftts', 'fpts', 'points']] \
+    #         .rename(
+    #             columns={'hts':'Home Team Score', 'ats':'Away Team Score', 'ftts':'First Team to Score', 'fpts':'First Player to Score', 'points':'Points'}
+    #         )
+    # )
 
     with st.expander("#### Players' Preds"):
         # SELECT USER

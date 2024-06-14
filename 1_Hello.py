@@ -19,20 +19,21 @@ if 'user_info' not in st.session_state:
     ''')
     # login_notification = login.empty()
 
-    if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
-        signup.warning(
-            '''Sign up not available anymore''',
-            icon=':info'
-        )
-    else:
-        signup_form = signup.form(key='signup-form', clear_on_submit=False)
-        signup_username = signup_form.text_input(label='Username')
-        signup_email = signup_form.text_input(label='Email')
-        signup_password = signup_form.text_input(label='Password', type='password')
-        signup_form.caption('''
-        This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process. Email is only used as an login option.
-        ''')
-        # signup_notification = signup.empty()
+    # # if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
+    # if datetime.now() > datetime(2024,6,14,19,0):
+    #     signup.warning(
+    #         '''Sign up not available anymore''',
+    #         # icon=':info:'
+    #     )
+    # else:
+    #     signup_form = signup.form(key='signup-form', clear_on_submit=False)
+    #     signup_username = signup_form.text_input(label='Username')
+    #     signup_email = signup_form.text_input(label='Email')
+    #     signup_password = signup_form.text_input(label='Password', type='password')
+    #     signup_form.caption('''
+    #     This app uses Firebase to store and process data in US data centers. By creating an account, you consent to have your data stored and processed in the United States. If you do not agree to this, we will not be able to send you a verification email, and you will not be able to complete the registration process. Email is only used as an login option.
+    #     ''')
+    #     # signup_notification = signup.empty()
 
     forgot_password_form = forgot_password.form(key='forgot-password-form', clear_on_submit=False)
     forgot_password_email = forgot_password_form.text_input(label='Email')
@@ -44,9 +45,9 @@ if 'user_info' not in st.session_state:
         with auth_notification, st.spinner('Logging in'):
             auth_functions.sign_in(login_email, login_password)
 
-    if signup_form.form_submit_button(label='Sign up', use_container_width=True, type='primary'):
-        with auth_notification, st.spinner('Signing up'):
-            auth_functions.create_account(signup_username, signup_email, signup_password)
+    # if signup_form.form_submit_button(label='Sign up', use_container_width=True, type='primary'):
+    #     with auth_notification, st.spinner('Signing up'):
+    #         auth_functions.create_account(signup_username, signup_email, signup_password)
 
     if forgot_password_form.form_submit_button(label='Reset password', use_container_width=True, type='primary'):
         with auth_notification, st.spinner('Resetting password'):

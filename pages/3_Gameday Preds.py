@@ -129,14 +129,15 @@ else:
                     if submit:
                         # check if after deadline
                         cest = pytz.timezone('Europe/Warsaw')
-                        if datetime.now(cest) > datetime(
-                            gameday_deadline.year,
-                            gameday_deadline.month,
-                            gameday_deadline.day,
-                            gameday_deadline.hour,
-                            gameday_deadline.minute,
-                            tzinfo=cest
-                        ):
+                        # if datetime.now(cest) > datetime(
+                        #     gameday_deadline.year,
+                        #     gameday_deadline.month,
+                        #     gameday_deadline.day,
+                        #     gameday_deadline.hour,
+                        #     gameday_deadline.minute,
+                        #     tzinfo=cest
+                        # ):
+                        if datetime.now() > gameday_deadline:
                             st.error('Too late bro')
                         else:
                             row_to_insert = {

@@ -76,7 +76,8 @@ else:
     else:
         FIXTURES = st.session_state['fixtures']
 
-    if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
+    # if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
+    if datetime.now() > datetime(2024,6,14,19,0):
         st.info(
             '''Ups... It's past the deadline. Unfortunately, you cannot select Your Hero now''',
             icon='🕐'
