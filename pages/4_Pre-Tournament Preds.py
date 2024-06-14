@@ -26,8 +26,8 @@ else:
     PLAYERS = SQUADS.sort_values(by=['team.name', 'player.name'], ascending=[True, True])['player.name'].tolist()
 
     # if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
-    st.write(datetime.now())
-    st.write(datetime(2024,6,14,19,0))
+    # st.write(datetime.now())
+    # st.write(datetime(2024,6,14,19,0))
     if datetime.now() + timedelta(hours=2) > datetime(2024,6,14,19,0):
         st.info(
             '''Ups... It's past the deadline. Unfortunately, you cannot select Your Hero now''',
