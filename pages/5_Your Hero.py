@@ -34,7 +34,7 @@ with st.expander('How to score points?'):
     | Action                                                    | Points |
     |-----------------------------------------------------------|--------|
     | For playing up to 60 minutes                              | 1      |
-    | For playing 60 minutes or more (excluding stoppage time)  | 2      |
+    | For playing 60 minutes or more                            | 2      |
     | For each goal scored by a goalkeeper or defender          | 6      |
     | For each goal scored by a midfielder                      | 5      |
     | For each goal scored by an attacker                       | 4      |

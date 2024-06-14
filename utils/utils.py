@@ -79,6 +79,16 @@ def read_all_pretournament():
 
     return df
 
+def read_all_users():
+
+    sql = '''
+    select * from `eurobox24.eurobox24.users`
+    '''
+
+    df = CLIENT.query(sql).to_dataframe(int_dtype=None, float_dtype=None)
+
+    return df
+
 conn = st.connection('gcs', type=FilesConnection)
 
 def read_fixtures():

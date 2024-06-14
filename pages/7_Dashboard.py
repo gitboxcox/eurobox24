@@ -1,5 +1,8 @@
 import streamlit as st
 from utils.utils import *
+from datetime import datetime
+import time
+import pytz
 
 @st.cache_data
 def get_fixtures(foo=1):
@@ -10,6 +13,15 @@ def get_fixtures(foo=1):
 def get_all_scored_preds(foo=1):
     df = read_all_scored_preds()
     return df
+
+@st.cache_data
+def get_last_pretournament_preds(foo=1):
+    preds = read_all_pretournament()
+    idx = preds.groupby('userId')['timestamp'].idxmax()
+    preds = preds.loc[idx].reset_index(drop=True)
+    preds = preds.drop(columns=['timestamp'])
+    preds.columns = ['Player', 'Winner', '2nd Place', 'Top Scorer', 'MVP', "Lewandowski's goals", "Poland Exit Phase"]
+    return preds
 
 if 'fixtures' not in st.session_state:
     fixtures = get_fixtures(time.time())
@@ -22,6 +34,12 @@ if 'scored_preds' not in st.session_state:
     st.session_state['scored_preds'] = preds
 else:
     preds = st.session_state['scored_preds']
+
+if 'pretour' not in st.session_state:
+    pretour = get_last_pretournament_preds(time.time())
+    st.session_state['pretour'] = pretour
+else:
+    pretour = st.session_state['pretour']
 
 st.title('Dashboard')
 st.write('''
@@ -50,6 +68,9 @@ else:
 
         preds = get_all_scored_preds(time.time())
         st.session_state['scored_preds'] = preds
+
+        pretour = get_last_pretournament_preds(time.time())
+        st.session_state['pretour'] = pretour
 
 
     with st.expander('#### Your Points'):
@@ -82,15 +103,23 @@ else:
         st.write('Work In Progress')
 
     with st.expander("#### Players' Preds"):
-        # SELECT GAMEDAY
-        gameday = st.selectbox(
-            label='Select Gameday',
-            options=['All']+fixtures['fixture.gameday.name'].unique().tolist(),
-            key='playerpreds-select-gameday'
-        )
+        # SELECT USER
+        # user = st.selectbox(
+        #     label='Select Gameday',
+        #     options=['All']+fixtures['fixture.gameday.name'].unique().tolist(),
+        #     key='playerpreds-select-user'
+        # )
+
+        # # SELECT GAMEDAY
+        # gameday = st.selectbox(
+        #     label='Select Gameday',
+        #     options=['All']+fixtures['fixture.gameday.name'].unique().tolist(),
+        #     key='playerpreds-select-gameday'
+        # )
 
         # SELECT FIXTURE
-        fixtures_to_show = ['All'] + fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list() if gameday != "All" else ['All'] + fixtures['fixture.id'].to_list()
+        # fixtures_to_show = ['All'] + fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list() if gameday != "All" else ['All'] + fixtures['fixture.id'].to_list()
+        fixtures_to_show = fixtures['fixture.id'].to_list()
         fixture = st.selectbox(
             label='Select Fixture',
             # options=['All']+fixtures.loc[fixtures['fixture.gameday.name']==gameday,'fixture.id'].to_list(),
@@ -121,6 +150,11 @@ else:
             value=False
         )
         st.write('Work In Progress')
+
+    with st.expander('#### Pre-Torunament Preds'):
+        if datetime.now(pytz.timezone("Europe/Warsaw")) > datetime(2024,6,14,19,0,tzinfo=pytz.timezone("Europe/Warsaw")):
+            st.dataframe(pretour)
+        st.write("You will be able to see other Players' Pre-Tournament Preds after the submission deadline")
 
     with st.expander('#### Best Heroes'):
         st.write('Work In Progress')
