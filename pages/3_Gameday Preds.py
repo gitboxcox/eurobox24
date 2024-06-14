@@ -64,7 +64,8 @@ else:
 
     USER_PREDS = get_latest_user_preds(LATEST_PREDS, st.session_state['user_info']['localId'])
 
-    available_gamedays = RAW_FIXTURES.loc[pd.to_datetime(RAW_FIXTURES['fixture.date']).dt.tz_localize(None)-pd.Timedelta(hours=2)>pd.to_datetime('now'), 'fixture.gameday.name'].unique().tolist()
+    # available_gamedays = RAW_FIXTURES.loc[pd.to_datetime(RAW_FIXTURES['fixture.date']).dt.tz_localize(None)-pd.Timedelta(hours=2)>pd.to_datetime('now'), 'fixture.gameday.name'].unique().tolist()
+    available_gamedays = RAW_FIXTURES.loc[RAW_FIXTURES['fixture.gameday.deadline']>datetime.now()+timedelta(hours=2), 'fixture.gameday.name'].unique().tolist()
 
     gameday = st.selectbox(
         label='Select a Gameday from this list',
