@@ -114,7 +114,6 @@ def nice_fixture(fixtureId, fixtures):
 def read_all_scored_preds():
 
     # AUTH
-    # creds = service_account.Credentials.from_service_account_file('/Users/jakubpaczusko/Desktop/gcp/eurobox24/.streamlit/eurobox24-9e51d9d0d968.json')
     client = storage.Client(credentials=credentials)
 
     # ALL BLOBS WITH SCORED PREDS
